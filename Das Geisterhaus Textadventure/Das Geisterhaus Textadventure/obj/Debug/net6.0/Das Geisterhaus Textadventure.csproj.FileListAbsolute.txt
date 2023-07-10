@@ -1,0 +1,15 @@
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\bin\Debug\net6.0\Das Geisterhaus Textadventure.exe
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\bin\Debug\net6.0\Das Geisterhaus Textadventure.deps.json
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\bin\Debug\net6.0\Das Geisterhaus Textadventure.runtimeconfig.json
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\bin\Debug\net6.0\Das Geisterhaus Textadventure.dll
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\bin\Debug\net6.0\Das Geisterhaus Textadventure.pdb
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\Das Geisterhaus Textadventure.csproj.AssemblyReference.cache
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\Das Geisterhaus Textadventure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\Das Geisterhaus Textadventure.AssemblyInfoInputs.cache
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\Das Geisterhaus Textadventure.AssemblyInfo.cs
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\Das Geisterhaus Textadventure.csproj.CoreCompileInputs.cache
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\Das Geisterhaus Textadventure.dll
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\refint\Das Geisterhaus Textadventure.dll
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\Das Geisterhaus Textadventure.pdb
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\Das Geisterhaus Textadventure.genruntimeconfig.cache
+C:\Users\nikla\Desktop\Das Geisterhaus Textadventure\Das Geisterhaus Textadventure\obj\Debug\net6.0\ref\Das Geisterhaus Textadventure.dll
