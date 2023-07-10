@@ -1,10 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 
+class DachbodenRaum : RaumMitHoherEnergie
+{
+    public DachbodenRaum(string beschreibung) : base(beschreibung) { }
+
+    public override void Betreten(Spieler spieler)
+    {
+        List<Type> edelsteine = new List<Type> { typeof(Smaragd), typeof(Rubin), typeof(Diamant) };
+        bool hatAlleEdelsteine = true;
+
+        foreach (Type edelstein in edelsteine)
+        {
+            if (!spieler.HatItem(edelstein))
+            {
+                hatAlleEdelsteine = false;
+                break;
+            }
+        }
+
+        if (hatAlleEdelsteine)
+        {
+            base.Betreten(spieler);
+        }
+        else
+        {
+            Console.WriteLine("Du stehst vor einem Tor aus magischer Energie. Es sind drei Büsten aus einem glänzenden Metall zu sehen, die Aussparungen für drei Edelsteine haben. Sie rufen: 'Bring uns die Edelsteine: den Smaragd, den Rubin und den Diamanten. Nur dann wirst du hindurchgehen können!'");
+            spieler.SetAktuellePosition(this);
+        }
+    }
+
+}
+
 class Program
 {
     static void Main(string[] args)
     {
+        Console.WriteLine("Mögliche Befehle: vorne, zurueck, links, rechts, inventar, angriff, stats, map");
+
         RaumMitNiedrigerEnergie Tor = new RaumMitNiedrigerEnergie("Du stehst vor einem großen, rostigen Tor. Es scheint alt und verlassen.");
         RaumMitNiedrigerEnergie Weg = new RaumMitNiedrigerEnergie("Ein schmaler, gepflasterter Weg führt zum Haupteingang des Gebäudes.");
         RaumMitNiedrigerEnergie Haupteingang = new RaumMitNiedrigerEnergie("Der Haupteingang des Gebäudes. Die Tür steht offen.");
@@ -12,35 +45,45 @@ class Program
         RaumMitNiedrigerEnergie RaumU1 = new RaumMitNiedrigerEnergie("Ein kleiner, unmarkierter Raum. Es riecht muffig.");
         RaumMitNiedrigerEnergie RaumU2 = new RaumMitNiedrigerEnergie("Ein weiterer kleiner Raum. Die Wände sind mit Schimmel bedeckt.");
         RaumMitNiedrigerEnergie Treppe = new RaumMitNiedrigerEnergie("Eine alte, knarrende Holztreppe führt nach oben.");
-        RaumMitHoherEnergie ErsterStock = new RaumMitHoherEnergie("Du stehst im ersten Stock. Es ist ruhig hier oben.");
+        RaumMitNiedrigerEnergie ErsterStock = new RaumMitNiedrigerEnergie("Du stehst im ersten Stock. Es ist ruhig hier oben.");
         RaumMitHoherEnergie Raum1 = new RaumMitHoherEnergie("Ein leeres Zimmer. Der Staub hängt in der Luft.");
         RaumMitHoherEnergie Raum2 = new RaumMitHoherEnergie("Ein Raum mit einem kaputten Fenster. Der Wind pfeift durch.");
-        RaumMitHoherEnergie ErsterStockWeiter = new RaumMitHoherEnergie("Der Flur im ersten Stock geht weiter. Es ist dunkel am Ende.");
+        RaumMitNiedrigerEnergie ErsterStockWeiter = new RaumMitNiedrigerEnergie("Der Flur im ersten Stock geht weiter. Es ist dunkel am Ende.");
         RaumMitHoherEnergie Raum3 = new RaumMitHoherEnergie("Ein dunkles Zimmer. Es ist kalt.");
         RaumMitHoherEnergie Raum4 = new RaumMitHoherEnergie("Ein helles Zimmer. Die Sonne scheint durch ein Loch im Dach.");
-        RaumMitHoherEnergie Treppe2 = new RaumMitHoherEnergie("Eine weitere Treppe. Sie führt zum Dachboden.");
-        RaumMitHoherEnergie Dachboden = new RaumMitHoherEnergie("Der Dachboden. Es riecht nach altem Holz.");
+        RaumMitNiedrigerEnergie Treppe2 = new RaumMitNiedrigerEnergie("Eine weitere Treppe. Sie führt zum Dachboden.");
+        DachbodenRaum Dachboden = new DachbodenRaum("Der Dachboden!");
 
-        Item Arznei = new Pickup("Du hast Arznei gefunden!", 10);
-        Item Schutz = new Pickup("Du hast Schutz gefunden!", 10);
-        Item Batterie = new Pickup("Du hast eine Batterie gefunden!", 10);
-        Item Smaragd = new Edelstein("Du hast den Smaragd gefunden!", 10);
-        Item Rubin = new Edelstein("Du hast den Rubin gefunden!", 10);
-        Item Diamant = new Edelstein("Du hast den Diamant gefunden!", 10);
-        Item LeereDose = new WertloserGegenstand("Du hast eine leere Dose gefunden!", 0);
-        Item RostigesBesteck = new WertloserGegenstand("Du hast rostiges Besteck gefunden!", 0);
-        Item VerstaubtesBuch = new WertloserGegenstand("Du hast ein verstaubtes Buch gefunden!", 0);
+        Arznei arznei = new Arznei("Arznei!", 50);
+        Schutz schutz = new Schutz("Schutz", 25);
+        Batterie batterie = new Batterie("Batterie", 2);
+        Item Smaragd = new Smaragd("Smaragd", 10);
+        Item Rubin = new Rubin("Rubin!", 10);
+        Item Diamant = new Diamant("Diamant", 10);
+        Item LeereDose = new WertloserGegenstand("leere Dose", 0);
+        Item VerstaubtesBuch = new WertloserGegenstand("Verstaubtes Buch", 0);
+        Item SchickerHut = new WertloserGegenstand("Schicker Hut", 0);
 
-        RaumU1.AddItem(Schutz);
-        RaumU1.AddItem(Batterie);
+        RaumU1.AddItem(schutz);
+        RaumU1.AddItem(batterie);
+        RaumU1.AddItem(VerstaubtesBuch);
+        RaumU2.AddItem(schutz);
+        RaumU2.AddItem(arznei);
+        RaumU2.AddItem(LeereDose);
+        Raum4.AddItem(schutz);
+        Raum4.AddItem(arznei);
+        Raum4.AddItem(batterie);
+        Raum4.AddItem(SchickerHut);
 
-        Geist geist1 = new Geist("Geist 1", Smaragd);
-        Geist geist2 = new Geist("Geist 2", Rubin);
-        Geist geist3 = new Geist("Geist 3", Diamant);
+        Geist geist1 = new Geist("Paul der Geist", Smaragd);
+        Geist geist2 = new Geist("Gerlinde das Gespenst", Rubin);
+        Geist geist3 = new Geist("Uwe aus der Unterwelt", Diamant);
 
         Raum1.SetGeist(geist1);
         Raum2.SetGeist(geist2);
         Raum3.SetGeist(geist3);
+
+
 
         // Verknüpfen der Räume
         Tor.SetVor(Weg);
@@ -69,9 +112,34 @@ class Program
         ErsterStockWeiter.SetVor(Treppe2);
         Treppe2.SetZurueck(ErsterStockWeiter);
         Treppe2.SetVor(Dachboden);
+        Tor.SetVor(Weg);
+        Weg.SetZurueck(Tor);
+        Weg.SetVor(Haupteingang);
+        Dachboden.SetZurueck(Treppe2);
+        Treppe2.SetVor(Dachboden);
 
         //Setup Player
-        Spieler player1 = new Spieler("Geisterjäger", Tor);
+        Spieler player1 = new Spieler("Geisterjäger", Tor, Tor, Weg, Haupteingang, Flur, RaumU1, RaumU2, Treppe, ErsterStock, Raum1, Raum2, ErsterStockWeiter, Raum3, Raum4, Treppe2, Dachboden);
+
+        Dictionary<Raum, string> raumBuchstaben = new Dictionary<Raum, string>()
+    {
+        {Tor, "A"},
+        {Weg, "B"},
+        {Haupteingang, "C"},
+        {Flur, "D"},
+        {RaumU1, "E"},
+        {RaumU2, "F"},
+        {Treppe, "G"},
+        {ErsterStock, "H"},
+        {Raum1, "I"},
+        {Raum2, "J"},
+        {ErsterStockWeiter, "K"},
+        {Raum3, "L"},
+        {Raum4, "M"},
+        {Treppe2, "N"},
+        {Dachboden, "O"},
+    };
+        player1.ZeigeKarte();
 
         //GameLoop
         while (true)
@@ -79,60 +147,84 @@ class Program
             Raum aktuellePosition = player1.GetAktuellePosition();
             aktuellePosition.Betreten(player1);
 
+            if (!player1.IstAmLeben())
+            {
+                Console.WriteLine("Leider bist du gestorben! Starte das Spiel neu!");
+                Console.ReadLine();
+
+                return;
+            }
+
+
             if (aktuellePosition is RaumMitHoherEnergie)
             {
                 RaumMitHoherEnergie hoherEnergieRaum = aktuellePosition as RaumMitHoherEnergie;
                 Geist geist = hoherEnergieRaum.GetGeist();
                 if (geist != null)
                 {
-                    player1.ReduziereStats(25, 25);
-                    Console.WriteLine("Ein Geist ist hier! Du hast 25 Leben und 25 Schutz verloren.");
+                    player1.ReduziereStats(0, 25);
+                    if (player1.GetSchutzanzeige() == 0)
+                    {
+                        player1.ReduziereStats(25, 0);
+                    }
+                    Console.WriteLine($"Ein Geist ist hier! Du hast {25 - player1.GetSchutzanzeige()} Leben und {player1.GetSchutzanzeige()} Schutz verloren.");
                 }
             }
 
-            if (player1.GetAktuellePosition() == Dachboden)
+            if (player1.GetAktuellePosition() == Dachboden && player1.HatItem(typeof(Smaragd)) && player1.HatItem(typeof(Rubin)) && player1.HatItem(typeof(Diamant)))
             {
-                Console.WriteLine("Das Spiel ist vorbei!");
+                Console.WriteLine("Du hast alle Edelsteine gesammelt und den Dachboden betreten. Das Siegel ist gebrochen und der Fluch ist gelüftet! Du hast das Spiel gewonnen!");
                 break;
             }
 
-            Console.WriteLine("Wohin möchtest du gehen? (vorne, links, rechts)");
+            Console.WriteLine("Wohin möchtest du gehen? (vorne, zurueck, links, rechts)");
             string richtung = Console.ReadLine().ToLower();
 
             switch (richtung)
             {
                 case "vorne":
-                    if (player1.GetAktuellePosition().GetVor() != null)
-                    {
-                        player1.SetAktuellePosition(player1.GetAktuellePosition().GetVor());
-                    }
-                    else
-                    {
-                        Console.WriteLine("Da ist kein Weg vor dir!");
-                    }
-                    break;
+                case "zurueck":
                 case "links":
-                    if (player1.GetAktuellePosition().GetLinks() != null)
-                    {
-                        player1.SetAktuellePosition(player1.GetAktuellePosition().GetLinks());
-                    }
-                    else
-                    {
-                        Console.WriteLine("Da ist kein Weg links von dir. Bitte versuche es erneut.");
-                    }
-                    break;
                 case "rechts":
-                    if (player1.GetAktuellePosition().GetRechts() != null)
+                    Raum naechsterRaum = null;
+
+                    switch (richtung)
                     {
-                        player1.SetAktuellePosition(player1.GetAktuellePosition().GetRechts());
+                        case "vorne":
+                            naechsterRaum = player1.GetAktuellePosition().GetVor();
+                            break;
+                        case "zurueck":
+                            naechsterRaum = player1.GetAktuellePosition().GetZurueck();
+                            break;
+                        case "links":
+                            naechsterRaum = player1.GetAktuellePosition().GetLinks();
+                            break;
+                        case "rechts":
+                            naechsterRaum = player1.GetAktuellePosition().GetRechts();
+                            break;
+                    }
+
+                    if (naechsterRaum == null)
+                    {
+                        Console.WriteLine($"Da ist kein Weg {richtung} von dir!");
+                    }
+                    else if (naechsterRaum is RaumMitHoherEnergie)
+                    {
+                        Console.WriteLine($"Dein Energiedetektor schlägt in Richtung {richtung} aus. Möchtest du eintreten? (y/n)");
+                        string eingabe = Console.ReadLine().ToLower();
+                        if (eingabe == "y")
+                        {
+                            player1.SetAktuellePosition(naechsterRaum);
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Da ist kein Weg rechts von dir. Bitte versuche es erneut.");
+                        player1.SetAktuellePosition(naechsterRaum);
                     }
                     break;
+
                 case "inventar":
-                    player1.ZeigeInventar();
+                    player1.ZeigeInventar(raumBuchstaben);
                     break;
                 case "angriff":
                     if (aktuellePosition is RaumMitHoherEnergie)
@@ -156,9 +248,17 @@ class Program
                 case "stats":
                     player1.ZeigeStats();
                     break;
+                case "map":
+                    player1.ZeigeKarte();
+                    break;
                 default:
                     Console.WriteLine("Ungültige Richtung. Bitte versuche es erneut.");
                     break;
+                case "death":
+                    player1.ReduziereStats(player1.GetLebensanzeige(), 0);
+                    Console.WriteLine("Du hast den Tod-Befehl eingegeben. Deine Lebenspunkte wurden auf 0 gesetzt.");
+                    break;
+
             }
         }
     }
@@ -178,6 +278,7 @@ class Raum
         this.beschreibung = beschreibung;
         items = new List<Item>();
     }
+
 
     public string GetBeschreibung()
     {
@@ -245,13 +346,20 @@ class Raum
         if (items.Count > 0)
         {
             Console.WriteLine("Du siehst folgende Gegenstände:");
+            List<Item> itemsToPickup = new List<Item>();
             foreach (Item item in items)
             {
                 Console.WriteLine(item.GetBeschreibung());
+                itemsToPickup.Add(item);
+            }
+            foreach (Item item in itemsToPickup)
+            {
                 spieler.Aufheben(item);
+                item.Handeln(spieler);
             }
         }
     }
+
 }
 
 class Spieler
@@ -262,15 +370,96 @@ class Spieler
     private int lebensanzeige;
     private int schutzanzeige;
     private int batterieladungen;
+    private Raum Tor, Weg, Haupteingang, Flur, RaumU1, RaumU2, Treppe, ErsterStock, Raum1, Raum2, ErsterStockWeiter, Raum3, Raum4, Treppe2, Dachboden;
+    private Dictionary<Item, Raum> itemFundorte;
+    public bool IstAmLeben()
+    {
+        return lebensanzeige > 0;
+    }
+    public int GetSchutzanzeige()
+    {
+        return schutzanzeige;
+    }
+    public int GetLebensanzeige()
+    {
+        return lebensanzeige;
+    }
+    public void ErhoeheLeben(int wert)
+    {
+        lebensanzeige += wert;
+    }
 
-    public Spieler(string name, Raum startposition)
+    public void ErhoeheSchutz(int wert)
+    {
+        schutzanzeige += wert;
+    }
+
+    public void ErhoeheBatterieladungen(int wert)
+    {
+        batterieladungen += wert;
+    }
+
+    public bool HatItem(Type itemTyp)
+    {
+        foreach (Item item in inventar)
+        {
+            if (item.GetType() == itemTyp)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    private Dictionary<Raum, string> raumNamen;
+
+    public Spieler(string name, Raum startposition, Raum Tor, Raum Weg, Raum Haupteingang, Raum Flur, Raum RaumU1, Raum RaumU2, Raum Treppe, Raum ErsterStock, Raum Raum1, Raum Raum2, Raum ErsterStockWeiter, Raum Raum3, Raum Raum4, Raum Treppe2, Raum Dachboden)
     {
         this.name = name;
         aktuellePosition = startposition;
         inventar = new List<Item>();
         lebensanzeige = 100;
-        schutzanzeige = 0;
-        batterieladungen = 100;
+        schutzanzeige = 50;
+        batterieladungen = 3;
+        itemFundorte = new Dictionary<Item, Raum>();
+
+        this.Tor = Tor;
+        this.Weg = Weg;
+        this.Haupteingang = Haupteingang;
+        this.Flur = Flur;
+        this.RaumU1 = RaumU1;
+        this.RaumU2 = RaumU2;
+        this.Treppe = Treppe;
+        this.ErsterStock = ErsterStock;
+        this.Raum1 = Raum1;
+        this.Raum2 = Raum2;
+        this.ErsterStockWeiter = ErsterStockWeiter;
+        this.Raum3 = Raum3;
+        this.Raum4 = Raum4;
+        this.Treppe2 = Treppe2;
+        this.Dachboden = Dachboden;
+
+        raumNamen = new Dictionary<Raum, string>()
+        {
+            {Tor, "Tor"},
+            {Weg, "Weg"},
+            {Haupteingang, "Haupteingang"},
+            {Flur, "Flur"},
+            {RaumU1, "RaumU1"},
+            {RaumU2, "RaumU2"},
+            {Treppe, "Treppe"},
+            {ErsterStock, "ErsterStock"},
+            {Raum1, "Raum1"},
+            {Raum2, "Raum2"},
+            {ErsterStockWeiter, "ErsterStockWeiter"},
+            {Raum3, "Raum3"},
+            {Raum4, "Raum4"},
+            {Treppe2, "Treppe2"},
+            {Dachboden, "Dachboden"},
+        };
+
     }
 
     public Raum GetAktuellePosition()
@@ -287,17 +476,21 @@ class Spieler
     {
         inventar.Add(item);
         aktuellePosition.RemoveItem(item);
+        itemFundorte[item] = aktuellePosition;
         Console.WriteLine($"Du hast {item.GetBeschreibung()} aufgenommen.");
     }
 
-    public void ZeigeInventar()
+
+    public void ZeigeInventar(Dictionary<Raum, string> raumBuchstaben)
     {
         if (inventar.Count > 0)
         {
             Console.WriteLine("Inventar:");
             foreach (Item item in inventar)
             {
-                Console.WriteLine(item.GetBeschreibung());
+                Raum fundort = itemFundorte[item];
+                string raumBuchstabe = raumBuchstaben[fundort];
+                Console.WriteLine($"{item.GetBeschreibung()} gefunden in Raum {raumBuchstabe}");
             }
         }
         else
@@ -308,9 +501,23 @@ class Spieler
 
     public void ReduziereStats(int leben, int schutz)
     {
+        if (schutzanzeige - schutz >= 0)
+        {
+            schutzanzeige -= schutz;
+        }
+        else
+        {
+            leben += schutz - schutzanzeige;
+            schutzanzeige = 0;
+        }
+
         lebensanzeige -= leben;
-        schutzanzeige -= schutz;
+        if (lebensanzeige < 0)
+        {
+            lebensanzeige = 0;
+        }
     }
+
 
     public void Angreifen(Geist geist)
     {
@@ -318,8 +525,22 @@ class Spieler
         {
             batterieladungen -= 2;
             Item edelstein = geist.DropEdelstein();
-            inventar.Add(edelstein);
-            Console.WriteLine($"Du hast den Geist angegriffen und einen {edelstein.GetBeschreibung()} erhalten!");
+            if (edelstein != null)
+            {
+                inventar.Add(edelstein);
+                itemFundorte[edelstein] = aktuellePosition;
+                Console.WriteLine($"Du hast den Geist angegriffen und einen {edelstein.GetBeschreibung()} erhalten!");
+            }
+            else
+            {
+                Console.WriteLine("Dieser Geist wurde bereits besiegt.");
+            }
+            if (geist.IstBesiegt())
+            {
+                RaumMitHoherEnergie hoherEnergieRaum = aktuellePosition as RaumMitHoherEnergie;
+                hoherEnergieRaum.SetGeist(null);
+                Console.WriteLine("Der Geist ist verschwunden!");
+            }
         }
         else
         {
@@ -327,13 +548,63 @@ class Spieler
         }
     }
 
+
     public void ZeigeStats()
     {
         Console.WriteLine($"Lebensanzeige: {lebensanzeige}");
         Console.WriteLine($"Schutzanzeige: {schutzanzeige}");
         Console.WriteLine($"Batterieladungen: {batterieladungen}");
     }
+    public void ZeigeKarte()
+    {
+        Dictionary<Raum, string> raumBuchstaben = ErstelleKartenReferenzen();
+        Console.WriteLine("Karte:");
+        Console.WriteLine("EG:    E--D--F");
+        Console.WriteLine("          |");
+        Console.WriteLine("     A--B--C--G");
+        Console.WriteLine("          |");
+        Console.WriteLine("1.OG:     I--H--K--M");
+        Console.WriteLine("          |");
+        Console.WriteLine("     J--L--N----");
+        Console.WriteLine("               |");
+        Console.WriteLine("2.OG:          O");
+
+        Console.WriteLine("\nLegende:");
+        foreach (var raum in raumBuchstaben)
+        {
+            string raumName = raumNamen[raum.Key];
+
+            Console.WriteLine($"{raum.Value}: {raumName}");
+        }
+    }
+    private Dictionary<Raum, string> ErstelleKartenReferenzen()
+    {
+        return new Dictionary<Raum, string>()
+        {
+            {Tor, "A"},
+            {Weg, "B"},
+            {Haupteingang, "C"},
+            {Flur, "D"},
+            {RaumU1, "E"},
+            {RaumU2, "F"},
+            {Treppe, "G"},
+            {ErsterStock, "H"},
+            {Raum1, "I"},
+            {Raum2, "J"},
+            {ErsterStockWeiter, "K"},
+            {Raum3, "L"},
+            {Raum4, "M"},
+            {Treppe2, "N"},
+            {Dachboden, "O"},
+        };
+    }
+
 }
+
+
+
+
+
 
 class Item
 {
@@ -348,22 +619,58 @@ class Item
     {
         return beschreibung;
     }
+
+    public virtual void Handeln(Spieler spieler) { }
 }
 
-class Pickup : Item
+class Arznei : Item
 {
     private int wert;
 
-    public Pickup(string beschreibung, int wert) : base(beschreibung)
+    public Arznei(string beschreibung, int wert) : base(beschreibung)
     {
         this.wert = wert;
     }
 
-    public int GetWert()
+    public override void Handeln(Spieler spieler)
     {
-        return wert;
+        spieler.ErhoeheLeben(wert);
+        Console.WriteLine($"Deine Lebensanzeige wurde um {wert} erhöht!");
     }
 }
+
+class Schutz : Item
+{
+    private int wert;
+
+    public Schutz(string beschreibung, int wert) : base(beschreibung)
+    {
+        this.wert = wert;
+    }
+
+    public override void Handeln(Spieler spieler)
+    {
+        spieler.ErhoeheSchutz(wert);
+        Console.WriteLine($"Deine Schutzanzeige wurde um {wert} erhöht!");
+    }
+}
+
+class Batterie : Item
+{
+    private int wert;
+
+    public Batterie(string beschreibung, int wert) : base(beschreibung)
+    {
+        this.wert = wert;
+    }
+
+    public override void Handeln(Spieler spieler)
+    {
+        spieler.ErhoeheBatterieladungen(wert);
+        Console.WriteLine($"Deine Batterieladungen wurden um {wert} erhöht!");
+    }
+}
+
 
 class Gegenstand : Item
 {
@@ -387,18 +694,46 @@ class WertloserGegenstand : Gegenstand
     }
 }
 
-class Edelstein : Gegenstand
-{
-    private int wert;
 
-    public Edelstein(string beschreibung, int wert) : base(beschreibung)
+class Smaragd : Item
+{
+    public Smaragd(string beschreibung, int wert) : base(beschreibung)
     {
-        this.wert = wert;
+
     }
 
-    public int GetWert()
+    public override void Handeln(Spieler spieler)
     {
-        return wert;
+        spieler.Aufheben(this);
+        Console.WriteLine("Du hast den Smaragd aufgenommen!");
+    }
+}
+
+class Rubin : Item
+{
+    public Rubin(string beschreibung, int wert) : base(beschreibung)
+    {
+
+    }
+
+    public override void Handeln(Spieler spieler)
+    {
+        spieler.Aufheben(this);
+        Console.WriteLine("Du hast den Rubin aufgenommen!");
+    }
+}
+
+class Diamant : Item
+{
+    public Diamant(string beschreibung, int wert) : base(beschreibung)
+    {
+
+    }
+
+    public override void Handeln(Spieler spieler)
+    {
+        spieler.Aufheben(this);
+        Console.WriteLine("Du hast den Diamanten aufgenommen!");
     }
 }
 
@@ -416,8 +751,19 @@ class Geist
 
     public Item DropEdelstein()
     {
-        Console.WriteLine($"Der {name} wurde besiegt und hat einen {edelstein.GetBeschreibung()} fallen gelassen!");
-        return edelstein;
+        if (edelstein != null)
+        {
+            Console.WriteLine($" {name} wurde besiegt und hat einen {edelstein.GetBeschreibung()} fallen gelassen!");
+            Item droppedEdelstein = edelstein;
+            edelstein = null;
+            return droppedEdelstein;
+        }
+        return null;
+    }
+
+    public bool IstBesiegt()
+    {
+        return edelstein == null;
     }
 }
 
